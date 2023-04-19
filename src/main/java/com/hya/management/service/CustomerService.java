@@ -10,4 +10,6 @@ public interface CustomerService extends IService<CustomerDO> {
     Result customerList();
     Result updateCustomer(CustomerDTO customerDTO);
     Result deleteCustomer(Long id);
+
+    Result addCustomer(  CustomerDTO customerDTO);
 }

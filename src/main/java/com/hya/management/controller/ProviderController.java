@@ -1,34 +1,38 @@
 package com.hya.management.controller;
 
 import com.hya.management.common.dto.CustomerDTO;
+import com.hya.management.common.dto.ProviderDTO;
 import com.hya.management.service.CustomerService;
+import com.hya.management.service.ProviderService;
 import com.hya.management.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/customer")
-public class CustomerController {
+@RequestMapping("/provider")
 
+public class ProviderController {
     @Autowired
-    private CustomerService customerService;
+    private ProviderService providerService;
 
     @GetMapping("/list")
     Result list() {
-        return customerService.customerList();
+        return providerService.providerList();
     }
 
     @PutMapping("/update")
-    Result update(@RequestBody CustomerDTO customerDTO) {
-        return customerService.updateCustomer(customerDTO);
+    Result update(@RequestBody ProviderDTO providerDTO) {
+        return providerService.updateProvider(providerDTO);
     }
 
     @DeleteMapping("/delete/{id}")
     Result delete(@PathVariable Long id) {
-        return customerService.deleteCustomer(id);
+        return providerService.deleteProvider(id);
     }
+
     @PostMapping("/add")
-    Result add(@RequestBody CustomerDTO customerDTO){
-        return customerService.addCustomer(customerDTO);
+    Result add(@RequestBody ProviderDTO providerDTO) {
+        return providerService.addProvider(providerDTO);
     }
 }
