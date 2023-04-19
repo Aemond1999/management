@@ -1,0 +1,35 @@
+spring:
+  main:
+    banner-mode: off
+  redis:
+    database: 4
+    host: localhost
+    port: 6379
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/bysj?serverTimezone=UTC&characterEncoding=utf-8
+      username: root
+      password: 123123
+  thymeleaf:
+    cache: true
+    encoding: UTF-8
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true #?????????
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #????
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+server:
+  port: 7777
+qiniu:
+  accessKeyId: DYndLkz5jc9RnM_xgqiV77t9SLA0f-OaOvn3HjXS
+  secretKey: xjMEgiWzRPxUTaaGmq-BbLCulAO9jgLa70oXZ0Dl
+  urlPrefix: http://rt9mxmck5.hd-bkt.clouddn.com/
+  bucket: hya-blog-resource
+
