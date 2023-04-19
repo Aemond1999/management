@@ -20,7 +20,6 @@ public class WarehouseDO {
     private String address;
     @TableField("description")
     private String description;
-
     @TableField("deleted")
     private Boolean deleted;
     @TableField(value = "create_time",fill = FieldFill.INSERT)

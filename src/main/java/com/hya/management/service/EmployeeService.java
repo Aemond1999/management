@@ -12,4 +12,6 @@ public interface EmployeeService extends IService<EmployeeDO> {
     Result deleteEmployee(Long id);
 
     Result addEmployee(EmployeeDTO employeeDTO);
+
+    String selectEmpName(Long id);
 }

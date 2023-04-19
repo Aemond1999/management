@@ -37,6 +37,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
     private DeptService deptService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private EmployeeMapper employeeMapper;
 
     @Override
     public Result employeeList() {
@@ -45,7 +47,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
         String json = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isNotBlank(json)) {
             List<EmployeeVO> employeeVOS = JSON.parseArray(json, EmployeeVO.class);
-            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(),employeeVOS);
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), employeeVOS);
         }
         //如果没有缓存则查询数据库
         List<EmployeeVO> employeeVOS = employeeService.list().stream().map(s -> {
@@ -56,7 +58,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
         }).collect(Collectors.toList());
         //如果没有缓存则添加缓存
         redisCache.setCacheObject(key, employeeVOS);
-        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(),employeeVOS);
+        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), employeeVOS);
     }
 
     @Override
@@ -91,5 +93,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
         } else {
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
         }
+    }
+
+    @Override
+    public String selectEmpName(Long id) {
+        return employeeMapper.selectEmpName(id);
     }
 }

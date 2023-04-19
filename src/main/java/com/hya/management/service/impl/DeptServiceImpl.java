@@ -51,7 +51,6 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptDO> implements 
 
     @Override
     public DeptVO getDeptById(Long id) {
-
         return CopyBeanUtil.copyBean(deptService.getById(id), DeptVO.class);
     }
 }

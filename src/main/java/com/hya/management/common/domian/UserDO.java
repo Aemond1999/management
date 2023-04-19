@@ -18,14 +18,8 @@ public class UserDO {
     private String username;
     @TableField("password")
     private String password;
-    @TableField("email")
-    private String email;
-    @TableField("gender")
-    private String gender;
     @TableField("avatar")
     private String avatar;
-    @TableField("nickname")
-    private String nickname;
     @TableField("status")
     private Boolean status;
     @TableField("deleted")
@@ -38,4 +32,6 @@ public class UserDO {
     private LocalDateTime updateTime;
     @TableField("update_by")
     private String updateBy;
+    @TableField("emp_id")
+    private Long empId;
 }
