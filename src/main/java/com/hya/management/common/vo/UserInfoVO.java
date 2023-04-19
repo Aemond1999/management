@@ -13,6 +13,4 @@ public class UserInfoVO {
     private Long id;
     private String username;
     private EmployeeVO employeeVO;
-
-
 }

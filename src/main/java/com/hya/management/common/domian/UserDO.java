@@ -31,7 +31,7 @@ public class UserDO {
     @TableField(value = "update_time",fill=FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
     @TableField("update_by")
-    private String updateBy;
+    private Long updateBy;
     @TableField("emp_id")
     private Long empId;
 }

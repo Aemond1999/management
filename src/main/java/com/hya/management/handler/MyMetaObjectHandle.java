@@ -31,6 +31,6 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateUser",userDetails.getUserDO().getId());
+        metaObject.setValue("updateBy",userDetails.getUserDO().getId());
     }
 }

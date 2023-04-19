@@ -28,5 +28,5 @@ public class DeptDO {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
     @TableField("update_by")
-    private String updateBy;
+    private Long updateBy;
 }
