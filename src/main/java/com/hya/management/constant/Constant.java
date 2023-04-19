@@ -11,4 +11,5 @@ public class Constant {
     public static final String CACHE_PROVIDER_PREFIX="cache:provider:";
     public static final String CACHE_WAREHOUSE_PREFIX="cache:warehouse:";
     public static final String CACHE_EMPLOYEE_PREFIX="cache:employee:";
+    public static final String CACHE_DEPT_PREFIX="cache:dept:";
 }
