@@ -32,5 +32,7 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         metaObject.setValue("updateTime", LocalDateTime.now());
         metaObject.setValue("updateBy",userDetails.getUserDO().getId());
+        metaObject.setValue("useTime", LocalDateTime.now());
+        metaObject.setValue("useBy",userDetails.getUserDO().getId());
     }
 }

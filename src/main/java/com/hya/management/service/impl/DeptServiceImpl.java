@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+
 @Service
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptDO> implements DeptService {
     @Autowired

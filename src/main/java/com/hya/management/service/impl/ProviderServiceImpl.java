@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
 @Service
 public class ProviderServiceImpl extends ServiceImpl<ProviderMapper, ProviderDO> implements ProviderService {
     @Autowired
