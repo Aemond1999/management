@@ -36,7 +36,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     @Override
     public Result productList(Long current, Long size, @NotNull ProductQueryDTO productQueryDTO) {
         IPage<ProductDO> iPage = new Page<>(current, size);
-
         //设置查询条件
         LambdaQueryWrapper<ProductDO> lqw = new LambdaQueryWrapper<>();
         lqw
@@ -44,14 +43,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
                 .like(StringUtils.isNotBlank(productQueryDTO.getProductName()), ProductDO::getProductName, productQueryDTO.getProductName())
                 .like(productQueryDTO.getWarehouseId() != null, ProductDO::getWarehouseId, productQueryDTO.getWarehouseId());
         //获取对应数据
-        List<ProductVO> products = CopyBeanUtil
-                .copyBeanList(productService.page(iPage, lqw).getRecords(), ProductVO.class)
-                .stream()
-                .map(s -> {
-                    String warehouseName = warehouseService.getById(s.getWarehouseId()).getWarehouseName();
-                    s.setWarehouseName(warehouseName);
-                    return s;
-                }).collect(Collectors.toList());
+        List<ProductVO> products = CopyBeanUtil.copyBeanList(productService.page(iPage, lqw).getRecords(), ProductVO.class);
+        products.forEach(s->{
+                 String warehouseName = warehouseService.getById(s.getWarehouseId()).getWarehouseName();
+                 s.setWarehouseName(warehouseName);
+        });
         PageVO pageVO = new PageVO(products, iPage.getTotal(), current, size);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), pageVO);
     }

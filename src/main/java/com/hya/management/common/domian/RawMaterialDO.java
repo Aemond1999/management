@@ -4,31 +4,28 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.hya.management.common.bo.ProductBO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
-@TableName("sale_order")
-public class SaleOrderDO {
+@TableName("raw_material")
+public class RawMaterialDO {
     @TableId
     private Long id;
-    @TableField("customer_id")
-    private Long customerId;
+    @TableField("raw_material_name")
+    private String rawMaterialName;
     @TableField("warehouse_id")
     private Long warehouseId;
-    @TableField("sum")
-    private Float sum;
-    @TableField("message")
-    private String message;
-    @TableField("is_audit")
-    private Boolean audit;
-    @TableField("status")
-    private Boolean status;
+    @TableField("number")
+    private Long number;
+    @TableField("warning")
+    private Long warning;
+    @TableField("value")
+    private Float value;
+    @TableField("unit")
+    private String unit;
     @TableField("deleted")
     private Boolean deleted;
     @TableField(value = "create_time", fill = FieldFill.INSERT)
@@ -39,6 +36,4 @@ public class SaleOrderDO {
     private LocalDateTime updateTime;
     @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
-    @TableField("sale_time")
-    private LocalDateTime saleTime;
 }

@@ -22,8 +22,8 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
         metaObject.setValue("updateTime", LocalDateTime.now());
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-       metaObject.setValue("createBy", userDetails.getUserDO().getId());
-      metaObject.setValue("updateBy",userDetails.getUserDO().getId());
+        metaObject.setValue("createBy", userDetails.getUserDO().getId());
+        metaObject.setValue("updateBy", userDetails.getUserDO().getId());
     }
 
     @Override
@@ -31,8 +31,6 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateBy",userDetails.getUserDO().getId());
-        metaObject.setValue("useTime", LocalDateTime.now());
-        metaObject.setValue("useBy",userDetails.getUserDO().getId());
+        metaObject.setValue("updateBy", userDetails.getUserDO().getId());
     }
 }

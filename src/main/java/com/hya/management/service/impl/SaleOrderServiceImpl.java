@@ -1,26 +1,34 @@
 package com.hya.management.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hya.management.common.domian.ProductDO;
 import com.hya.management.common.domian.SaleOrderDO;
 import com.hya.management.common.domian.SaleOrderDetailDO;
 import com.hya.management.common.dto.SaleOrderDTO;
+import com.hya.management.common.dto.SaleOrderQueryDTO;
+import com.hya.management.common.vo.PageVO;
+import com.hya.management.common.vo.SaleOrderDetailVO;
+import com.hya.management.common.vo.SaleOrderVO;
 import com.hya.management.constant.Constant;
 import com.hya.management.enums.HttpCodeEnum;
 import com.hya.management.mapper.SaleOrderMapper;
-import com.hya.management.service.ProductService;
-import com.hya.management.service.SaleOrderDetailService;
-import com.hya.management.service.SaleOrderService;
+import com.hya.management.service.*;
 import com.hya.management.utils.CopyBeanUtil;
 import com.hya.management.utils.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Transactional
+
 @Service
 public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrderDO> implements SaleOrderService {
     @Autowired
@@ -29,11 +37,21 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
     private ProductService productService;
     @Autowired
     private SaleOrderDetailService saleOrderDetailService;
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private WarehouseService warehouseService;
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SaleOrderMapper saleOrderMapper;
 
     @Override
     public Result addSaleOrder(SaleOrderDTO saleOrderDTO) {
         SaleOrderDO saleOrderDO = CopyBeanUtil.copyBean(saleOrderDTO, SaleOrderDO.class);
-        boolean a= saleOrderService.save(saleOrderDO);
+        boolean a = saleOrderService.save(saleOrderDO);
         List<SaleOrderDetailDO> saleOrderDetailDOS = CopyBeanUtil.copyBeanList(saleOrderDTO.getDetail(), SaleOrderDetailDO.class);
         List<SaleOrderDetailDO> collect = saleOrderDetailDOS.stream().map(s -> {
             s.setProductId(s.getId());
@@ -43,10 +61,70 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
         }).collect(Collectors.toList());
 
         boolean b = saleOrderDetailService.saveBatch(collect);
-        if (a&&b) {
+        if (a && b) {
             return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
         } else {
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
         }
+    }
+
+    @Override
+    public Result saleOrderList(Long current, Long size, SaleOrderQueryDTO saleOrderQueryDTO) {
+        IPage<SaleOrderDO> iPage = new Page<>(current, size);
+
+        //设置查询条件
+        LambdaQueryWrapper<SaleOrderDO> lqw = new LambdaQueryWrapper<>();
+        lqw
+                .eq(saleOrderQueryDTO.getId() != null, SaleOrderDO::getId, saleOrderQueryDTO.getId())
+                .eq(saleOrderQueryDTO.getWarehouseId() != null, SaleOrderDO::getWarehouseId, saleOrderQueryDTO.getWarehouseId())
+                .like(saleOrderQueryDTO.getCustomerId() != null, SaleOrderDO::getCustomerId, saleOrderQueryDTO.getCustomerId());
+
+        List<SaleOrderVO> saleOrderVOS = CopyBeanUtil.copyBeanList(saleOrderService.page(iPage, lqw).getRecords(), SaleOrderVO.class);
+        List<SaleOrderVO> collect = saleOrderVOS
+                .stream()
+                .map(s -> {
+                    s.setCustomerName(customerService.getById(s.getCustomerId()).getCustomerName());
+                    s.setWarehouseName(warehouseService.getById(s.getWarehouseId()).getWarehouseName());
+                    s.setEmpName(employeeService.selectEmpName(userService.getById(s.getCreateBy()).getEmpId()));
+                    List<SaleOrderDetailDO> saleOrderDetailDOS = saleOrderDetailService.list(new LambdaQueryWrapper<SaleOrderDetailDO>().eq(SaleOrderDetailDO::getSaleOrderId, s.getId()));
+                    List<SaleOrderDetailVO> saleOrderDetailVOS = CopyBeanUtil.copyBeanList(saleOrderDetailDOS, SaleOrderDetailVO.class);
+                    s.setDetail(saleOrderDetailVOS);
+                    return s;
+                })
+                .collect(Collectors.toList());
+
+
+        PageVO pageVO = new PageVO(collect, iPage.getTotal(), current, size);
+        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), pageVO);
+    }
+
+    @Override
+    public Result audit(Long id) {
+        Boolean flag = saleOrderMapper.audit(id);
+        if (flag) {
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
+        } else {
+            return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
+        }
+    }
+
+    @Transactional
+    @Override
+    public Result sale(Long id) {
+        if (  saleOrderService.getById(id).getAudit()){
+            List<SaleOrderDetailDO> saleOrderDetailDOS = saleOrderDetailService.list(new LambdaQueryWrapper<SaleOrderDetailDO>().eq(SaleOrderDetailDO::getSaleOrderId, id));
+            for (SaleOrderDetailDO s : saleOrderDetailDOS) {
+                ProductDO productDO = productService.getById(s.getProductId());
+                if (productDO.getNumber() - s.getSaleNumber() > 0) {
+                    productDO.setNumber(productDO.getNumber() - s.getSaleNumber());
+                    productService.updateById(productDO);
+                }else {
+                    return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
+                }
+            }
+            saleOrderMapper.updateSaleTimeAndStatus(LocalDateTime.now(), id);
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
+        }else
+            return  Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
     }
 }

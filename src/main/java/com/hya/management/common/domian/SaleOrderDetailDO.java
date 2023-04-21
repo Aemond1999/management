@@ -27,6 +27,8 @@ public class SaleOrderDetailDO {
     private String unit;
     @TableField("deleted")
     private Boolean deleted;
+    @TableField("value")
+    private Float value;
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     @TableField(value = "create_by", fill = FieldFill.INSERT)

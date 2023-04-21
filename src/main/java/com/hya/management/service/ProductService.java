@@ -14,6 +14,5 @@ public interface ProductService extends IService<ProductDO> {
     Result productList(Long current, Long size, ProductQueryDTO productQueryDTO);
     Result updateProduct(ProductDTO productDTO);
     Result deleteProduct(Long id);
-
     List<ProductBO> productListByWarehouseId(Long id);
 }

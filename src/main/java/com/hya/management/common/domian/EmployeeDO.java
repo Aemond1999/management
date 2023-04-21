@@ -24,7 +24,6 @@ public class EmployeeDO {
     private Long phone;
     @TableField("hire_date")
     private LocalDateTime hireDate;
-
     @TableField("dept_id")
     private Long deptId;
     @TableField("deleted")
