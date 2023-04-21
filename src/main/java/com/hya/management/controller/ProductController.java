@@ -1,9 +1,9 @@
 package com.hya.management.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.hya.management.common.bo.ProductBO;
+
 import com.hya.management.common.dto.ProductDTO;
 import com.hya.management.common.dto.ProductQueryDTO;
+import com.hya.management.common.vo.ProductVO;
 import com.hya.management.service.ProductService;
 import com.hya.management.utils.Result;
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +35,10 @@ public class ProductController {
     public Result update(@RequestBody ProductDTO productDTO) {
         return productService.updateProduct(productDTO);
     }
+
+
     @GetMapping("/listByWarehouseId/{id}")
-    public List<ProductBO>listByWarehouseId(@PathVariable Long id){
+    public List<ProductVO>listByWarehouseId(@PathVariable Long id){
         return productService.productListByWarehouseId(id);
     }
 

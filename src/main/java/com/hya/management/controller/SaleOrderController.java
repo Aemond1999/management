@@ -16,8 +16,8 @@ public class SaleOrderController {
     @Autowired
     private SaleOrderService saleOrderService;
     @GetMapping("/list/{current}/{size}")
-    Result list(@PathVariable Long current, @PathVariable Long size, SaleOrderQueryDTO saleOrderQueryDTO){
-        return saleOrderService.saleOrderList(current,size,saleOrderQueryDTO);
+    Result list(@PathVariable Long current, @PathVariable Long size, SaleOrderQueryDTO query){
+        return saleOrderService.saleOrderList(current,size,query);
 
     }
     @PostMapping("/add")
@@ -26,7 +26,6 @@ public class SaleOrderController {
     }
     @PutMapping("/audit")
     Result audit(@RequestBody IdDTO id){
-
         return saleOrderService.audit(id.getId());
     }
     @PostMapping("/sale")

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -39,14 +40,13 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         String json = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isNotBlank(json)) {
             List<WarehouseVO> warehouseVOS = JSON.parseArray(json, WarehouseVO.class);
-
             return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), warehouseVOS);
         }
         //如果没有缓存则查询数据库
         List<WarehouseDO> warehouseDOS = warehouseService.list();
         List<WarehouseVO> warehouseVOS = CopyBeanUtil.copyBeanList(warehouseDOS, WarehouseVO.class);
         //如果没有缓存则添加缓存
-        redisCache.setCacheObject(key,warehouseVOS);
+        redisCache.setCacheObject(key,warehouseVOS,Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), warehouseVOS);
     }
 

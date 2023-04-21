@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProviderServiceImpl extends ServiceImpl<ProviderMapper, ProviderDO> implements ProviderService {
@@ -43,7 +44,7 @@ public class ProviderServiceImpl extends ServiceImpl<ProviderMapper, ProviderDO>
         List<ProviderDO> providerDOS = providerService.list();
         List<ProviderVO> providerVOS = CopyBeanUtil.copyBeanList(providerDOS, ProviderVO.class);
         //如果没有缓存则添加缓存
-        redisCache.setCacheObject(key,providerVOS);
+        redisCache.setCacheObject(key,providerVOS,Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), providerVOS);
     }
 

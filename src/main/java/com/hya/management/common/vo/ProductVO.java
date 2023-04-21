@@ -15,4 +15,5 @@ public class ProductVO {
     private Float value;
     private String unit;
     private String warehouseName;
+    private Long saleNumber;
 }

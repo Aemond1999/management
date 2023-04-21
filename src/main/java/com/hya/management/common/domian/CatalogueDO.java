@@ -14,16 +14,14 @@ import java.time.LocalDateTime;
 public class CatalogueDO {
     @TableId
     private Long id;
-    @TableField("raw_material_name")
-    private String rawMaterialName;
+    @TableField("catalogue_name")
+    private String catalogueName;
     @TableField("value")
     private Float value;
     @TableField("unit")
     private String unit;
     @TableField("prov_id")
     private Long provId;
-
-
     @TableField("deleted")
     private Boolean deleted;
     @TableField(value = "create_time", fill = FieldFill.INSERT)

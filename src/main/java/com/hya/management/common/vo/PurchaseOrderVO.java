@@ -1,17 +1,15 @@
 package com.hya.management.common.vo;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
 @NoArgsConstructor
-public class SaleOrderVO {
+public class PurchaseOrderVO {
     private Long id;
-    private Long customerId;
+    private Long provId;
     private Long warehouseId;
     private Float sum;
     private String message;
@@ -19,10 +17,9 @@ public class SaleOrderVO {
     private Boolean status;
     private LocalDateTime createTime;
     private Long createBy;
-    private LocalDateTime saleTime;
-    private String customerName;
+    private LocalDateTime purchaseTime;
+    private String provName;
     private String warehouseName;
     private String empName;
-    private List<SaleOrderDetailVO> detail;
-
+    private List<PurchaseOrderDetailVO> detail;
 }

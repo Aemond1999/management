@@ -9,7 +9,7 @@ import com.hya.management.utils.Result;
 
 public interface SaleOrderService extends IService<SaleOrderDO> {
     Result addSaleOrder(SaleOrderDTO saleOrderDTO);
-    Result saleOrderList(Long current, Long size, SaleOrderQueryDTO saleOrderQueryDTO);
+    Result saleOrderList(Long current, Long size, SaleOrderQueryDTO query);
 
     Result audit(Long id);
 

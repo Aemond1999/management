@@ -18,6 +18,8 @@ public class RawMaterialDO {
     private String rawMaterialName;
     @TableField("warehouse_id")
     private Long warehouseId;
+    @TableField("catalogue_id")
+    private Long catalogueId;
     @TableField("number")
     private Long number;
     @TableField("warning")

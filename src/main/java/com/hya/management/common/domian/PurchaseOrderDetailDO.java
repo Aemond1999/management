@@ -8,28 +8,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
-@TableName("sale_order")
-public class SaleOrderDO {
+@TableName("purchase_order_detail")
+public class PurchaseOrderDetailDO {
     @TableId
     private Long id;
-    @TableField("customer_id")
-    private Long customerId;
-    @TableField("warehouse_id")
-    private Long warehouseId;
-    @TableField("sum")
-    private Float sum;
-    @TableField("message")
-    private String message;
-    @TableField("is_audit")
-    private Boolean audit;
-    @TableField("status")
-    private Boolean status;
+    @TableField("purchase_order_id")
+    private Long purchaseOrderId;
+    @TableField("catalogue_id")
+       private Long catalogueId;
+    @TableField("catalogue_name")
+    private String catalogueName;
+    @TableField("purchase_number")
+    private Long purchaseNumber;
+    @TableField("unit")
+    private String unit;
     @TableField("deleted")
     private Boolean deleted;
+    @TableField("value")
+    private Float value;
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     @TableField(value = "create_by", fill = FieldFill.INSERT)
@@ -38,6 +36,4 @@ public class SaleOrderDO {
     private LocalDateTime updateTime;
     @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
-    @TableField("sale_time")
-    private LocalDateTime saleTime;
 }

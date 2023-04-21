@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -45,7 +46,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptDO> implements 
         List<DeptDO> deptDOS = deptService.list();
         List<DeptVO> deptVOS = CopyBeanUtil.copyBeanList(deptDOS, DeptVO.class);
         //如果没有缓存则添加缓存
-        redisCache.setCacheObject(key, deptVOS);
+        redisCache.setCacheObject(key, deptVOS,Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), deptVOS);
     }
 

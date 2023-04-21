@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.bo.ProductBO;
 import com.hya.management.common.domian.ProductDO;
 import com.hya.management.common.dto.ProductDTO;
 import com.hya.management.common.dto.ProductQueryDTO;
 import com.hya.management.common.vo.PageVO;
 import com.hya.management.common.vo.ProductVO;
-import com.hya.management.constant.Constant;
 import com.hya.management.enums.HttpCodeEnum;
 import com.hya.management.mapper.ProductMapper;
 import com.hya.management.service.ProductService;
@@ -75,9 +73,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     }
 
     @Override
-    public List<ProductBO> productListByWarehouseId(Long id) {
+    public List<ProductVO> productListByWarehouseId(Long id) {
         LambdaQueryWrapper<ProductDO> lqw =new LambdaQueryWrapper<>();
         lqw.eq(ProductDO::getWarehouseId,id);
-        return  CopyBeanUtil.copyBeanList(productService.list(lqw), ProductBO.class);
+        return  CopyBeanUtil.copyBeanList(productService.list(lqw), ProductVO.class);
     }
 }

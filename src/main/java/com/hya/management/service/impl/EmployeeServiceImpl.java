@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -57,7 +58,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
             return employeeVO;
         }).collect(Collectors.toList());
         //如果没有缓存则添加缓存
-        redisCache.setCacheObject(key, employeeVOS);
+        redisCache.setCacheObject(key, employeeVOS,Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), employeeVOS);
     }
 

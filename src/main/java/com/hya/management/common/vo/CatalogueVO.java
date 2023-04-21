@@ -11,13 +11,15 @@ public class CatalogueVO {
 
     private Long id;
 
-    private String rawMaterialName;
+    private String catalogueName;
 
     private Float value;
 
     private String unit;
 
     private Long provId;
+
+    private Long purchaseNumber;
 
 
 }
