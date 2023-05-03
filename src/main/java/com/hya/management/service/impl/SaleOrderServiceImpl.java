@@ -4,21 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.ProductDO;
-import com.hya.management.common.domian.SaleOrderDO;
-import com.hya.management.common.domian.SaleOrderDetailDO;
+import com.hya.management.common.domain.ProductDO;
+import com.hya.management.common.domain.SaleOrderDO;
+import com.hya.management.common.domain.SaleOrderDetailDO;
 import com.hya.management.common.dto.SaleOrderDTO;
 import com.hya.management.common.dto.SaleOrderQueryDTO;
 import com.hya.management.common.vo.PageVO;
 import com.hya.management.common.vo.SaleOrderDetailVO;
 import com.hya.management.common.vo.SaleOrderVO;
-import com.hya.management.constant.Constant;
 import com.hya.management.enums.HttpCodeEnum;
 import com.hya.management.mapper.SaleOrderMapper;
 import com.hya.management.service.*;
 import com.hya.management.utils.CopyBeanUtil;
 import com.hya.management.utils.Result;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service

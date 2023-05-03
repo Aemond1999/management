@@ -1,10 +1,9 @@
 package com.hya.management.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hya.management.common.domian.PurchaseOrderDO;
+import com.hya.management.common.domain.PurchaseOrderDO;
 import com.hya.management.common.dto.PurchaseOrderDTO;
 import com.hya.management.common.dto.PurchaseOrderQueryDTO;
-import com.hya.management.common.dto.SaleOrderQueryDTO;
 import com.hya.management.utils.Result;
 
 public interface PurchaseOrderService extends IService<PurchaseOrderDO> {

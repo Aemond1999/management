@@ -1,13 +1,16 @@
 package com.hya.management.common.pojo;
 
-import com.hya.management.common.domian.UserDO;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.hya.management.common.domain.UserDO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -19,10 +22,19 @@ public class MyUserDetails implements UserDetails {
         this.userDO = userDO;
         this.permissions = permissions;
     }
+    @JSONField(serialize = false)
+    private List<GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(authorities!=null){
+            return authorities;
+        }
+        //把permissions中字符串类型的权限信息转换成GrantedAuthority对象存入authorities中
+        authorities = permissions.stream().
+                map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return authorities;
     }
 
     @Override
@@ -37,7 +49,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return userDO.getStatus();
     }
 
     @Override
@@ -47,11 +59,11 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return userDO.getStatus();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return userDO.getStatus();
     }
 }

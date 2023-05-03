@@ -4,16 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.ProductDO;
-import com.hya.management.common.domian.RawMaterialDO;
+import com.hya.management.common.domain.RawMaterialDO;
 import com.hya.management.common.dto.RawMaterialDTO;
 import com.hya.management.common.dto.RawMaterialQueryDTO;
 import com.hya.management.common.vo.PageVO;
-import com.hya.management.common.vo.ProductVO;
 import com.hya.management.common.vo.RawMaterialVO;
 import com.hya.management.enums.HttpCodeEnum;
 import com.hya.management.mapper.RawMaterialMapper;
-import com.hya.management.service.ProductService;
 import com.hya.management.service.RawMaterialService;
 import com.hya.management.service.WarehouseService;
 import com.hya.management.utils.CopyBeanUtil;
@@ -69,5 +66,15 @@ public class RawMaterialServiceImpl extends ServiceImpl<RawMaterialMapper, RawMa
         } else {
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
         }
+    }
+
+    @Override
+    public Result rawMaterialListByWarehouseId(Long id) {
+        LambdaQueryWrapper<RawMaterialDO> lqw =new LambdaQueryWrapper<>();
+        lqw.eq(RawMaterialDO::getWarehouseId,id);
+        List<RawMaterialVO> rawMaterialVOS = CopyBeanUtil.copyBeanList(rawMaterialService.list(lqw), RawMaterialVO.class);
+        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(),rawMaterialVOS);
+
+
     }
 }

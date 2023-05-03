@@ -48,7 +48,7 @@ public class TokenFilter extends OncePerRequestFilter {
             throw new RuntimeException("用户未登录");
         }
         //获取权限信息
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,null);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(httpServletRequest,httpServletResponse);
     }

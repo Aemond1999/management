@@ -1,7 +1,7 @@
 package com.hya.management.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hya.management.common.domian.CustomerDO;
+import com.hya.management.common.domain.CustomerDO;
 import com.hya.management.common.dto.CustomerDTO;
 import com.hya.management.utils.Result;
 

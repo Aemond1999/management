@@ -2,7 +2,7 @@ package com.hya.management.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.CatalogueDO;
+import com.hya.management.common.domain.CatalogueDO;
 import com.hya.management.common.vo.CatalogueVO;
 import com.hya.management.enums.HttpCodeEnum;
 import com.hya.management.mapper.CatalogueMapper;

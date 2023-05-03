@@ -8,6 +8,7 @@ import com.hya.management.service.ProductService;
 import com.hya.management.utils.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,19 +27,21 @@ public class ProductController {
         return productService.productList(current, size, productQueryDTO);
     }
 
+    @PreAuthorize("hasAuthority('warehouse')")
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Long id) {
         return productService.deleteProduct(id);
     }
 
+    @PreAuthorize("hasAuthority('warehouse')")
     @PutMapping("/update")
     public Result update(@RequestBody ProductDTO productDTO) {
         return productService.updateProduct(productDTO);
     }
 
-
-    @GetMapping("/listByWarehouseId/{id}")
-    public List<ProductVO>listByWarehouseId(@PathVariable Long id){
+    @PreAuthorize("hasAuthority('warehouse')")
+    @GetMapping("/listById/{id}")
+    public Result listByWarehouseId(@PathVariable Long id) {
         return productService.productListByWarehouseId(id);
     }
 

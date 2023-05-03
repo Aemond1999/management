@@ -2,7 +2,7 @@ package com.hya.management.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.CustomerDO;
+import com.hya.management.common.domain.CustomerDO;
 import com.hya.management.common.dto.CustomerDTO;
 import com.hya.management.common.vo.CustomerVO;
 import com.hya.management.constant.Constant;
@@ -14,10 +14,8 @@ import com.hya.management.utils.RedisCache;
 import com.hya.management.utils.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

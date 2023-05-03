@@ -4,16 +4,21 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hya.management.common.bo.UserTokenBO;
-import com.hya.management.common.domian.EmployeeDO;
-import com.hya.management.common.domian.UserDO;
+
+import com.hya.management.common.domain.EmployeeDO;
+import com.hya.management.common.domain.RoleDO;
+import com.hya.management.common.domain.UserDO;
+import com.hya.management.common.dto.UserDTO;
 import com.hya.management.common.dto.UserInfoDTO;
 import com.hya.management.common.dto.UserLoginDTO;
 import com.hya.management.common.pojo.MyUserDetails;
 import com.hya.management.common.vo.DeptVO;
 import com.hya.management.common.vo.EmployeeVO;
 import com.hya.management.common.vo.UserInfoVO;
+import com.hya.management.common.vo.UserVO;
 import com.hya.management.constant.Constant;
 import com.hya.management.enums.HttpCodeEnum;
+import com.hya.management.mapper.RoleMapper;
 import com.hya.management.mapper.UserMapper;
 import com.hya.management.service.DeptService;
 import com.hya.management.service.EmployeeService;
@@ -23,7 +28,6 @@ import com.hya.management.utils.JwtUtil;
 import com.hya.management.utils.RedisCache;
 import com.hya.management.utils.Result;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,9 +36,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -55,6 +59,62 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private DeptService deptService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RoleMapper roleMapper;
+
+    @Override
+    public Result userList() {
+        List<UserDO> userDOS = userService.list();
+        List<UserVO> userVOS = CopyBeanUtil.copyBeanList(userDOS, UserVO.class);
+        userVOS.forEach(s -> {
+            s.setEmpName(employeeService.selectEmpName(s.getEmpId()));
+            RoleDO role = roleMapper.getRole(s.getId());
+            s.setRoleId(role.getId());
+            s.setRoleName(role.getRoleName());
+        });
+        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), userVOS);
+    }
+
+    @Override
+    public Result updateUser(UserDTO userDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String password = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(password);
+        UserDO userDO = CopyBeanUtil.copyBean(userDTO, UserDO.class);
+        boolean flag = userService.updateById(userDO);
+        userMapper.updateUserRole(userDTO.getRoleId(), userDTO.getId());
+        if (flag) {
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
+        } else {
+            return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
+        }
+    }
+
+    @Override
+    public Result deleteUser(Long id) {
+        boolean flag = userService.removeById(id);
+        userMapper.deleteUserRole(id);
+        if (flag) {
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
+        } else {
+            return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
+        }
+    }
+
+    @Override
+    public Result addUser(UserDTO userDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String password = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(password);
+        UserDO userDO = CopyBeanUtil.copyBean(userDTO, UserDO.class);
+        boolean flag = userService.save(userDO);
+        userMapper.addUserRole(userDO.getId(), userDTO.getRoleId());
+        if (flag) {
+            return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
+        } else {
+            return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
+        }
+    }
 
     //登录
     @Override
@@ -64,7 +124,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         //调用authenticate进行认证
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         if (Objects.isNull(authentication)) {
-            return Result.failResult(HttpCodeEnum.LOGIN_ERROR.getCode(),HttpCodeEnum.LOGIN_ERROR.getMsg());
+            return Result.failResult(HttpCodeEnum.LOGIN_ERROR.getCode(), HttpCodeEnum.LOGIN_ERROR.getMsg());
         }
         //获取authentication中封装的用户信息
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
@@ -79,15 +139,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         HashMap<String, String> map = new HashMap<>();
         map.put("token", jwt);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), map);
-    }
-
-    //注册用户
-    @Override
-    public Result register(@NotNull UserDO userDO) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String password = bCryptPasswordEncoder.encode(userDO.getPassword());
-        userDO.setPassword(password);
-        return new Result(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), userService.save(userDO));
     }
 
     //注销用户
@@ -118,9 +169,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
         EmployeeDO employeeDO = employeeService.getById(user.getEmpId());
         EmployeeVO employeeVO = CopyBeanUtil.copyBean(employeeDO, EmployeeVO.class);
-        DeptVO deptVO= deptService.getDeptById(employeeVO.getDeptId());
+        DeptVO deptVO = deptService.getDeptById(employeeVO.getDeptId());
         employeeVO.setDeptName(deptVO.getDeptName());
-        UserInfoVO userInfoVO =new UserInfoVO(user.getId(), user.getUsername(),employeeVO);
+        UserInfoVO userInfoVO = new UserInfoVO(user.getId(), user.getUsername(), employeeVO);
         redisCache.setCacheObject(key, userInfoVO, Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), userInfoVO);
     }

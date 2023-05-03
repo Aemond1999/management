@@ -7,6 +7,7 @@ import com.hya.management.common.dto.SaleOrderQueryDTO;
 import com.hya.management.service.PurchaseOrderService;
 import com.hya.management.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PurchaseOrderController {
     @Autowired
     private PurchaseOrderService purchaseOrderService;
-
+    @PreAuthorize("hasAuthority('purchase')")
     @PostMapping("/add")
     Result add(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
         return purchaseOrderService.addPurchaseOrder(purchaseOrderDTO);
@@ -26,12 +27,12 @@ public class PurchaseOrderController {
         return purchaseOrderService.purchaseOrderList(current, size, query);
 
     }
-
+    @PreAuthorize("hasAuthority('purchase')")
     @PutMapping("/audit")
     Result audit(@RequestBody IdDTO id) {
         return purchaseOrderService.audit(id.getId());
     }
-
+    @PreAuthorize("hasAuthority('purchase')")
     @PostMapping("/purchase")
     Result purchase(@RequestBody IdDTO id) {
         return purchaseOrderService.purchase(id.getId());

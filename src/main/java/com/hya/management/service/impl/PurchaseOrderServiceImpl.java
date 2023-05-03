@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.*;
+import com.hya.management.common.domain.*;
 import com.hya.management.common.dto.PurchaseOrderDTO;
 import com.hya.management.common.dto.PurchaseOrderQueryDTO;
 import com.hya.management.common.vo.*;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -108,12 +107,14 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                     rawMaterialDO.setNumber(detail.getPurchaseNumber());
                     rawMaterialDO.setUnit(detail.getUnit());
                     rawMaterialDO.setValue(detail.getValue());
+                    rawMaterialDO.setCatalogueId(detail.getCatalogueId());
                     rawMaterialService.save(rawMaterialDO);
                 } else {
                     rawMaterial.setNumber(rawMaterial.getNumber() + detail.getPurchaseNumber());
                     rawMaterialService.updateById(rawMaterial);
                 }
             }
+            purchaseOrderMapper.updateSaleTimeAndStatus(LocalDateTime.now(),id);
             return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
         } else
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());

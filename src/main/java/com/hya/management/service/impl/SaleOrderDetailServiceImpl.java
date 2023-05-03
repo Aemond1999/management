@@ -1,8 +1,7 @@
 package com.hya.management.service.impl;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.SaleOrderDetailDO;
+import com.hya.management.common.domain.SaleOrderDetailDO;
 import com.hya.management.mapper.SaleOrderDetailMapper;
 import com.hya.management.service.SaleOrderDetailService;
 import org.springframework.stereotype.Service;

@@ -19,22 +19,22 @@ public class Result {
         this.msg = msg;
     }
 
-    public static  Result okResult(int code,String msg){
-        return new Result(code,msg);
+    public static Result okResult(int code, String msg) {
+        return new Result(code, msg);
     }
-    public static  Result okResult(int code,String msg,Object data){
-        return new Result(code,msg,data);
+
+    public static Result okResult(int code, String msg, Object data) {
+        return new Result(code, msg, data);
     }
-    public static  Result failResult(int code,String msg){
-        return new Result(code,msg);
+
+    public static Result failResult(int code, String msg) {
+        return new Result(code, msg);
     }
-    public static  Result failResult(int code, String msg, Object data){
-        return new Result(code,msg,data);
+
+    public static Result failResult(int code, String msg, Object data) {
+        return new Result(code, msg, data);
     }
 
     public Result() {
-
     }
-
-
 }

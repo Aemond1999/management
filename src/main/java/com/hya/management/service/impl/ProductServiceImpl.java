@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hya.management.common.domian.ProductDO;
+import com.hya.management.common.domain.ProductDO;
 import com.hya.management.common.dto.ProductDTO;
 import com.hya.management.common.dto.ProductQueryDTO;
 import com.hya.management.common.vo.PageVO;
@@ -19,10 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> implements ProductService {
@@ -73,9 +71,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, ProductDO> im
     }
 
     @Override
-    public List<ProductVO> productListByWarehouseId(Long id) {
+    public Result productListByWarehouseId(Long id) {
         LambdaQueryWrapper<ProductDO> lqw =new LambdaQueryWrapper<>();
         lqw.eq(ProductDO::getWarehouseId,id);
-        return  CopyBeanUtil.copyBeanList(productService.list(lqw), ProductVO.class);
+        List<ProductVO> productVOS = CopyBeanUtil.copyBeanList(productService.list(lqw), ProductVO.class);
+        return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(),productVOS);
+
+
     }
 }

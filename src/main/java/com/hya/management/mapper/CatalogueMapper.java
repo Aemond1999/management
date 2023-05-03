@@ -1,7 +1,7 @@
 package com.hya.management.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hya.management.common.domian.CatalogueDO;
+import com.hya.management.common.domain.CatalogueDO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
