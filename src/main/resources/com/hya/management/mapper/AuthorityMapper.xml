@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hya.management.mapper.AuthorityMapper">
+    <select id="getAuthorities" resultType="string">
+        select authority_name
+        from authority
+        where id in (select distinct authority_id
+                     from role_authority
+                              left join role on role.id = role_authority.role_id
+                     where role.id = (select role_id
+                                      from user_role
+                                               left join user on user.id = user_role.user_id
+                                      where user.id = #{id}))
+    </select>
+
+</mapper>
