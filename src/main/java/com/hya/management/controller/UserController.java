@@ -6,6 +6,7 @@ import com.hya.management.service.PicUploadService;
 import com.hya.management.service.UserService;
 import com.hya.management.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
@@ -21,14 +22,17 @@ public class UserController {
     Result list(){
         return userService.userList();
     }
+    @PreAuthorize("hasAuthority('user')")
     @PostMapping("/add")
     Result add(@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
     }
+    @PreAuthorize("hasAuthority('user')")
     @PutMapping("/update")
     Result update(@RequestBody UserDTO userDTO){
         return userService.updateUser(userDTO);
     }
+    @PreAuthorize("hasAuthority('user')")
     @DeleteMapping("/delete/{id}")
     Result delete(@PathVariable Long id){
         return userService.deleteUser(id);
