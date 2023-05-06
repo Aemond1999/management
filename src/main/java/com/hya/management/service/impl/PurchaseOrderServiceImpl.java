@@ -42,7 +42,8 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     public Result addPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) {
         PurchaseOrderDO purchaseOrderDO = CopyBeanUtil.copyBean(purchaseOrderDTO, PurchaseOrderDO.class);
         boolean a = purchaseOrderService.save(purchaseOrderDO);
-        List<PurchaseOrderDetailDO> purchaseOrderDetailDOS = CopyBeanUtil.copyBeanList(purchaseOrderDTO.getDetail(), PurchaseOrderDetailDO.class);
+        List<PurchaseOrderDetailDO> purchaseOrderDetailDOS = CopyBeanUtil
+                .copyBeanList(purchaseOrderDTO.getDetail(), PurchaseOrderDetailDO.class);
         purchaseOrderDetailDOS.forEach(s -> {
             s.setCatalogueId(s.getId());
             s.setId(null);
@@ -64,15 +65,21 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         lqw.eq(query.getId() != null, PurchaseOrderDO::getId, query.getId())
                 .eq(query.getWarehouseId() != null, PurchaseOrderDO::getWarehouseId, query.getWarehouseId())
                 .like(query.getProvId() != null, PurchaseOrderDO::getProvId, query.getProvId());
-        List<PurchaseOrderVO> purchaseOrderVOS = CopyBeanUtil.copyBeanList(purchaseOrderService.page(iPage, lqw).getRecords(), PurchaseOrderVO.class);
+        List<PurchaseOrderDO> records = purchaseOrderService.page(iPage, lqw).getRecords();
+        List<PurchaseOrderVO> purchaseOrderVOS = CopyBeanUtil.copyBeanList(records, PurchaseOrderVO.class);
+
         purchaseOrderVOS.forEach(s -> {
             s.setProvName(providerService.getById(s.getProvId()).getProvName());
             s.setWarehouseName(warehouseService.getById(s.getWarehouseId()).getWarehouseName());
             s.setEmpName(employeeService.selectEmpName(userService.getById(s.getCreateBy()).getEmpId()));
-            List<PurchaseOrderDetailDO> purchaseOrderDetailDOS = purchaseOrderDetailService.list(new LambdaQueryWrapper<PurchaseOrderDetailDO>().eq(PurchaseOrderDetailDO::getPurchaseOrderId, s.getId()));
-            List<PurchaseOrderDetailVO> purchaseOrderDetailVOS = CopyBeanUtil.copyBeanList(purchaseOrderDetailDOS, PurchaseOrderDetailVO.class);
+            LambdaQueryWrapper<PurchaseOrderDetailDO> qw = new LambdaQueryWrapper<>();
+            qw.eq(PurchaseOrderDetailDO::getPurchaseOrderId, s.getId());
+            List<PurchaseOrderDetailDO> purchaseOrderDetailDOS = purchaseOrderDetailService.list(qw);
+            List<PurchaseOrderDetailVO> purchaseOrderDetailVOS = CopyBeanUtil
+                    .copyBeanList(purchaseOrderDetailDOS, PurchaseOrderDetailVO.class);
             s.setDetail(purchaseOrderDetailVOS);
         });
+
         PageVO pageVO = new PageVO(purchaseOrderVOS, iPage.getTotal(), current, size);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), pageVO);
     }

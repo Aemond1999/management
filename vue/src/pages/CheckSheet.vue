@@ -409,11 +409,13 @@ export default {
                     axios.post("/api/checkSheet/add", this.form).then((res) => {
                         if (res.data.code === 200) {
                             this.$message.success("保存成功")
+
                         } else if (res.data.code === 403) {
                             this.$message.error("没有权限")
                         } else {
                             this.$message.error("保存失败")
                         }
+                        this.AddFormVisible=false
                     })
                 } else {
                     console.log('error submit!!');

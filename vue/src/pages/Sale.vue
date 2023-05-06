@@ -149,8 +149,8 @@ export default {
             })
         },
         getProduct() {
-            axios.get("/api/product/listByWarehouseId/" + this.form.warehouseId).then((res) => {
-                this.product = res.data
+            axios.get("/api/product/listById/" + this.form.warehouseId).then((res) => {
+                this.product = res.data.data
             })
         },
         getCustomer() {

@@ -54,7 +54,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
             return employeeVO;
         }).collect(Collectors.toList());
         //如果没有缓存则添加缓存
-        redisCache.setCacheObject(key, employeeVOS,Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
+        redisCache.setCacheObject(key, employeeVOS, Constant.CACHE_EXPIRE_TTL, TimeUnit.MINUTES);
         return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg(), employeeVOS);
     }
 
@@ -78,7 +78,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
         } else {
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());
         }
-
     }
 
     @Override
