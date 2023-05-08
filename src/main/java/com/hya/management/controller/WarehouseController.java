@@ -35,4 +35,6 @@ public class WarehouseController {
     Result add(@RequestBody WarehouseDTO warehouseDTO) {
         return warehouseService.addWarehouse(warehouseDTO);
     }
+
+
 }

@@ -42,9 +42,4 @@ public class CheckSheetDO {
     private Long inventoryId;
     @TableField("warehouse_id")
     private Long warehouseId;
-
-
-
-
-
 }

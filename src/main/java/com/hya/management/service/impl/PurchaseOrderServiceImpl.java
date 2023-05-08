@@ -121,7 +121,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                     rawMaterialService.updateById(rawMaterial);
                 }
             }
-            purchaseOrderMapper.updateSaleTimeAndStatus(LocalDateTime.now(),id);
+            purchaseOrderMapper.updateSaleTimeAndStatus(LocalDateTime.now(), id);
             return Result.okResult(HttpCodeEnum.SUCCESS.getCode(), HttpCodeEnum.SUCCESS.getMsg());
         } else
             return Result.failResult(HttpCodeEnum.FAIL.getCode(), HttpCodeEnum.FAIL.getMsg());

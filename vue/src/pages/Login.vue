@@ -37,7 +37,9 @@ export default {
                     this.$router.push('/loginFirst')
                 } else if (res.data.code === 505) {
                     this.$message.error("账号或密码错误")
-                } else {
+                } else if (res.data.code === 401){
+                    this.$message.error("账号或密码错误")
+                }else {
                     this.$message.error("未知错误")
                 }
             })

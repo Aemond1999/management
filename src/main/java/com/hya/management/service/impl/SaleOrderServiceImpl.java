@@ -45,6 +45,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
     @Autowired
     private SaleOrderMapper saleOrderMapper;
 
+    @Transactional
     @Override
     public Result addSaleOrder(SaleOrderDTO saleOrderDTO) {
         SaleOrderDO saleOrderDO = CopyBeanUtil.copyBean(saleOrderDTO, SaleOrderDO.class);
@@ -76,7 +77,9 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
             s.setCustomerName(customerService.getById(s.getCustomerId()).getCustomerName());
             s.setWarehouseName(warehouseService.getById(s.getWarehouseId()).getWarehouseName());
             s.setEmpName(employeeService.selectEmpName(userService.getById(s.getCreateBy()).getEmpId()));
-            List<SaleOrderDetailDO> saleOrderDetailDOS = saleOrderDetailService.list(new LambdaQueryWrapper<SaleOrderDetailDO>().eq(SaleOrderDetailDO::getSaleOrderId, s.getId()));
+            LambdaQueryWrapper<SaleOrderDetailDO> sqw = new LambdaQueryWrapper<>();
+            sqw.eq(SaleOrderDetailDO::getSaleOrderId, s.getId());
+            List<SaleOrderDetailDO> saleOrderDetailDOS = saleOrderDetailService.list(sqw);
             List<SaleOrderDetailVO> saleOrderDetailVOS = CopyBeanUtil.copyBeanList(saleOrderDetailDOS, SaleOrderDetailVO.class);
             s.setDetail(saleOrderDetailVOS);
         });

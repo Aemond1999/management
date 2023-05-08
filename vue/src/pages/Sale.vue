@@ -50,13 +50,11 @@
                         </el-table-column>
                         <el-table-column
                             prop="number"
-                            label="当前库存"
-                            width="130">
+                            label="当前库存">
                         </el-table-column>
                         <el-table-column
                             prop="saleNumber"
-                            label="销售量"
-                            width="130">
+                            label="销售量">
                             <template slot-scope="scope">
                                 <input type="text" v-model="scope.row.saleNumber"
                                        style="border:2px deepskyblue;height: 30px;width: 80px;background: #d9d9d9;color: red">
@@ -73,7 +71,7 @@
                     :data="form.detail"
                     border
                     fit
-                    style="width: 60%;position: relative;left: 83px">
+                    style="width: 100%;position: relative;left: 83px">
                     <el-table-column
                         prop="id"
                         label="成品编号">
